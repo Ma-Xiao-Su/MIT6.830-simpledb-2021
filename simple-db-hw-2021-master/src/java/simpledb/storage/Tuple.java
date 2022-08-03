@@ -12,8 +12,6 @@ import java.util.NoSuchElementException;
  * specified schema specified by a TupleDesc object and contain Field objects
  * with the data for each field.
  *
- * 代表一行数据。
- *
  */
 public class Tuple implements Serializable {
 
