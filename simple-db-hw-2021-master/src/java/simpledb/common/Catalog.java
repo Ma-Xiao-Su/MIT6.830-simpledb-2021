@@ -13,28 +13,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * 目录（`Catalog`SimpleDB 中的类）由当前在数据库中的表和表的模式列表组成。
- * 您将需要支持添加新表以及获取有关特定表的信息的能力。与每个表相关联的是一个`TupleDesc`对象，它允许操作员确定表中字段的类型和数量。
- *
- * `Catalog`全局目录是为整个 SimpleDB 进程分配的单个实例。
- * 全局目录可以通过 方法检索`Database.getCatalog()`，全局缓冲池（ using `Database.getBufferPool()`）也是如此。
- *
- */
-
-/**
  * The Catalog keeps track of all available tables in the database and their
  * associated schemas.
  * For now, this is a stub catalog that must be populated with tables by a
  * user program before it can be used -- eventually, this should be converted
  * to a catalog that reads a catalog table from disk.
- *
- * 目录跟踪数据库中所有可用的表及其关联的模式。
- * 目前，这是一个存根目录，用户程序必须先用表填充它，然后才能使用它 — —
- * 最终，它应该转换为从磁盘读取目录表的目录。
- *
- *
- * catalog 是 database中所有表的集合
- *
  * @Threadsafe
  */
 public class Catalog {
