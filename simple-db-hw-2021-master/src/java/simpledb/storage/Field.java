@@ -7,9 +7,6 @@ import java.io.*;
 
 /**
  * Interface for values of fields in tuples in SimpleDB.
- *
- * 字段。
- *
  */
 public interface Field extends Serializable{
     /**
