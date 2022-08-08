@@ -18,7 +18,10 @@ import java.util.concurrent.ConcurrentMap;
  * For now, this is a stub catalog that must be populated with tables by a
  * user program before it can be used -- eventually, this should be converted
  * to a catalog that reads a catalog table from disk.
+<<<<<<< HEAD
  *
+=======
+>>>>>>> 76cf1c5402fdd58876cf3eef3945fca74949ad76
  * @Threadsafe
  */
 public class Catalog {
