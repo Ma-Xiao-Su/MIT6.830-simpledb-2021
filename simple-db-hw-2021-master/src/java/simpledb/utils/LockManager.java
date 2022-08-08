@@ -5,16 +5,16 @@ import simpledb.storage.PageId;
 import simpledb.transaction.TransactionId;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class LockManager {
     /** Store locks per page. */
     private final Map<PageId, List<Lock>> lockMap;
 
     public LockManager() {
-        lockMap = new HashMap<>();
+        lockMap = new ConcurrentHashMap<>();
     }
 
     /**

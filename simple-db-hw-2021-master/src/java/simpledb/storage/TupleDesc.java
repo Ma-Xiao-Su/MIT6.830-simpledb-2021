@@ -210,7 +210,7 @@ public class TupleDesc implements Serializable {
         if (o == null) {
             return false;
         }
-        if (!this.getClass().equals(o.getClass())) {
+        if (!(o instanceof TupleDesc)) {
             return false;
         }
         TupleDesc object = (TupleDesc) o;
@@ -219,7 +219,7 @@ public class TupleDesc implements Serializable {
         }
         for (int i = 0; i < len; ++i) {
             if (!tdItems[i].fieldName.equals(object.tdItems[i].fieldName)
-                || !tdItems[i].fieldType.equals(object.tdItems[i].fieldType)) {
+                || tdItems[i].fieldType != object.tdItems[i].fieldType) {
                 return false;
             }
         }

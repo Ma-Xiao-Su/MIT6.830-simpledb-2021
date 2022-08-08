@@ -9,9 +9,9 @@ import java.util.List;
 // Cache pool for file pages(tuples), cache for fileIterator
 public class PageCachePool {
     private final List<Iterator<Tuple>> pageCache;
-    private Iterator<Tuple>             currentIterator;
-    private int                         currentIndex;
-    private int                         maxCacheNum;
+    private Iterator<Tuple> currentIterator;
+    private int currentIndex;
+    private int maxCacheNum;
 
     public PageCachePool(final double cacheRate, final int totalPage) {
         this.maxCacheNum = (int) cacheRate * totalPage;

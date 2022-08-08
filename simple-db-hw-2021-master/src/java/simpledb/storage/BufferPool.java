@@ -12,6 +12,9 @@ import simpledb.utils.LruCache;
 
 import java.io.*;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -41,6 +44,8 @@ public class BufferPool {
 
     private final LockManager lockManager;
 
+    private int numPages;
+
     /**
      * Creates a BufferPool that caches up to numPages pages.
      *
@@ -48,8 +53,9 @@ public class BufferPool {
      */
     public BufferPool(int numPages) {
         // some code goes here
-        lruCache = new LruCache<>(numPages);
-        lockManager = new LockManager();
+        this.numPages = numPages;
+        this.lruCache = new LruCache<>(numPages);
+        this.lockManager = new LockManager();
     }
     
     public static int getPageSize() {
@@ -168,6 +174,15 @@ public class BufferPool {
         throws DbException, IOException, TransactionAbortedException {
         // some code goes here
         // not necessary for lab1
+        DbFile table = Database.getCatalog().getDatabaseFile(tableId);
+        List<Page> dirtyPages = table.insertTuple(tid, t);
+        for (Page page : dirtyPages) {
+            page.markDirty(true, tid);
+            this.lruCache.put(page.getId(), page);
+            if (lruCache.getSize() > numPages) {
+                evictPage();
+            }
+        }
     }
 
     /**
@@ -187,6 +202,13 @@ public class BufferPool {
         throws DbException, IOException, TransactionAbortedException {
         // some code goes here
         // not necessary for lab1
+        int tableId = t.getRecordId().getPageId().getTableId();
+        DbFile table = Database.getCatalog().getDatabaseFile(tableId);
+        List<Page> dirtyPages = table.deleteTuple(tid, t);
+        for (Page page : dirtyPages) {
+            page.markDirty(true, tid);
+            this.lruCache.put(page.getId(), page);
+        }
     }
 
     /**
@@ -197,7 +219,10 @@ public class BufferPool {
     public synchronized void flushAllPages() throws IOException {
         // some code goes here
         // not necessary for lab1
-
+        Iterator<PageId> pageIterator =  lruCache.valueIterator();
+        while (pageIterator.hasNext()) {
+            flushPage(pageIterator.next());
+        }
     }
 
     /** Remove the specific page id from the buffer pool.
@@ -211,6 +236,7 @@ public class BufferPool {
     public synchronized void discardPage(PageId pid) {
         // some code goes here
         // not necessary for lab1
+        lruCache.remove(pid);
     }
 
     /**
@@ -220,11 +246,16 @@ public class BufferPool {
     private synchronized  void flushPage(PageId pid) throws IOException {
         // some code goes here
         // not necessary for lab1
+        Page page = lruCache.get(pid);
+        // log
+        DbFile table = Database.getCatalog().getDatabaseFile(pid.getTableId());
+        table.writePage(page);
+        lruCache.get(pid).markDirty(false, null);
     }
 
     /** Write all pages of the specified transaction to disk.
      */
-    public synchronized  void flushPages(TransactionId tid) throws IOException {
+    public synchronized void flushPages(TransactionId tid) throws IOException {
         // some code goes here
         // not necessary for lab1|lab2
     }
@@ -236,6 +267,13 @@ public class BufferPool {
     private synchronized  void evictPage() throws DbException {
         // some code goes here
         // not necessary for lab1
+        Iterator<Page> pageIterator = lruCache.reverseIterator();
+        while (pageIterator.hasNext()) {
+            Page page = pageIterator.next();
+            if (page.isDirty() == null) {
+                discardPage(page.getId());
+                return;
+            }
+        }
     }
-
 }

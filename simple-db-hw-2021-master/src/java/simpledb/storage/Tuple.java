@@ -10,10 +10,7 @@ import java.util.NoSuchElementException;
 /**
  * Tuple maintains information about the contents of a tuple. Tuples have a
  * specified schema specified by a TupleDesc object and contain Field objects
- * with the data for each field.
- *
- * 代表一行数据。
- *
+ * with the data for each field. *
  */
 public class Tuple implements Serializable {
 
@@ -112,7 +109,6 @@ public class Tuple implements Serializable {
             }
         }
         return str.toString();
-//        throw new UnsupportedOperationException("Implement this");
     }
 
     /**

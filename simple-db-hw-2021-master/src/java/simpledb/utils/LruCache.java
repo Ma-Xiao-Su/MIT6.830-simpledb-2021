@@ -1,6 +1,8 @@
 package simpledb.utils;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class LruCache<K, V> {
     // LruCache Node
@@ -27,7 +29,7 @@ public class LruCache<K, V> {
         this.tail = new Node(null, null);
         this.head.next = tail;
         this.tail.pre = head;
-        this.nodeMap = new HashMap<>();
+        this.nodeMap = new ConcurrentHashMap<>();
     }
 
     /**
@@ -115,10 +117,14 @@ public class LruCache<K, V> {
         return list.iterator();
     }
 
-//    public synchronized Iterator<V> valueIterator() {
-//        Collection<Node> nodes = nodeMap.values();
-//        List<V> valueList = nodes.stream().map(x -> x.value).collect(Collectors.toList());
-//    }
+    public synchronized Iterator<K> valueIterator() {
+        Collection<Node> nodes = nodeMap.values();
+        List<K> valueList = new ArrayList<>();
+        for (Node node : nodes) {
+            valueList.add((K) node.key);
+        }
+        return valueList.iterator();
+    }
 
     public synchronized int getSize() {
         return nodeMap.size();

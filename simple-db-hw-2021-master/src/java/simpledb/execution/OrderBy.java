@@ -14,12 +14,26 @@ import java.util.*;
 public class OrderBy extends Operator {
 
     private static final long serialVersionUID = 1L;
+
+    /** child: data source, incoming Tuple of all records for sorting */
     private OpIterator child;
-    private final TupleDesc td;
+
+    /** childTups: The implementation idea of OrderBy is to store all records
+     * of the data source child in the list when open, and then sort them */
     private final List<Tuple> childTups = new ArrayList<>();
+
+    private final TupleDesc td;
+
+    /** orderByField: sort according to the first few fields of the tuple; */
     private final int orderByField;
+
     private final String orderByFieldName;
+
+    /** it: The iterator returned by childTups.iterator() after sorting childTups,
+     * all data after the original data source child is sorted according to the field field. */
     private Iterator<Tuple> it;
+
+    /** asc: ascending or descending order, true means ascending order */
     private final boolean asc;
 
     /**
